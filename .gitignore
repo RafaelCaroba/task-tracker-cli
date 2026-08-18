@@ -1,0 +1,12 @@
+# Maven build output
+/target/
+
+# Java compiled artifacts
+*.class
+
+# Packaged artifacts
+*.jar
+
+# JetBrains IDE files
+/.idea/
+*.iml
