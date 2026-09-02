@@ -1,4 +1,4 @@
-﻿package br.com.caroba.tasktracker.service;
+package br.com.caroba.tasktracker.service;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -1,7 +1,7 @@
-﻿package br.com.caroba.tasktracker.model;
+package br.com.caroba.tasktracker.model;
 
 public class Task {
-    
+
     private final Long id;
     private final String description;
     private Status status;

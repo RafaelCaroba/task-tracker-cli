@@ -1,4 +1,4 @@
-﻿package br.com.caroba.tasktracker.model;
+package br.com.caroba.tasktracker.model;
 
 public enum Status {
     PENDING,
