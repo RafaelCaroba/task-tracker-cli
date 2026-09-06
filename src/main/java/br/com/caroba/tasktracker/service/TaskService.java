@@ -32,6 +32,39 @@ public class TaskService {
                 .toList();
     }
 
+    public List<TaskDTO> listarTasksParaIniciar() {
+        return tasks.stream()
+                .filter(task -> task.getStatus() == Status.PENDING)
+                .map(task -> new TaskDTO(
+                        task.getId(),
+                        task.getDescription(),
+                        task.getStatus()
+                ))
+                .toList();
+    }
+
+    public List<TaskDTO> listarTasksParaCompletar() {
+        return tasks.stream()
+                .filter(task -> task.getStatus() == Status.IN_PROGRESS)
+                .map(task -> new TaskDTO(
+                        task.getId(),
+                        task.getDescription(),
+                        task.getStatus()
+                ))
+                .toList();
+    }
+
+    public List<TaskDTO> listarTasksParaCancelar() {
+        return tasks.stream()
+                .filter(task -> task.getStatus() != Status.COMPLETED)
+                .map(task -> new TaskDTO(
+                        task.getId(),
+                        task.getDescription(),
+                        task.getStatus()
+                ))
+                .toList();
+    }
+
     public Task startTask(long id) {
         Task task = findTaskById(id);
         task.start();
