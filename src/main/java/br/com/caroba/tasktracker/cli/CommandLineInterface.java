@@ -47,6 +47,9 @@ public class CommandLineInterface {
 
                 case 5: cancelTask();
                     break;
+
+                case 6: removeTask();
+                    break;
             }
         }
         scanner.close();
@@ -122,6 +125,20 @@ public class CommandLineInterface {
         taskService.cancelTask(opcaoId);
         System.out.println("Tarefa cancelada com sucesso!");
 
+    }
+
+    private void removeTask() {
+        System.out.println("SELECIONE UMA TAREFA PARA REMOVER: ");
+        List<TaskDTO> taskList = taskService.listTasks();
+
+        if (taskList.isEmpty()) {
+            System.out.println("Nenhuma tarefa disponível");
+            return;
+        }
+
+        exibirTarefas(taskList);
+        int opcaoId = lerRequiredOpcao();
+        taskService.removeTask(opcaoId);
     }
 
     private int lerRequiredOpcao() {
