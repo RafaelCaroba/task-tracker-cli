@@ -1,35 +1,42 @@
 package br.com.caroba.tasktracker.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import br.com.caroba.tasktracker.dto.TaskDTO;
 import br.com.caroba.tasktracker.exception.TaskNotFoundException;
 import br.com.caroba.tasktracker.model.Status;
 import br.com.caroba.tasktracker.model.Task;
+import br.com.caroba.tasktracker.model.TaskData;
+import br.com.caroba.tasktracker.repository.TaskRepository;
 
 public class TaskService {
 
-    private final List<Task> tasks = new ArrayList<>();
-    private long nextId = 1;
+    private final TaskRepository repository;
+    private final List<Task> tasks;
+    private long nextId;
 
-    public Task addTask(String description) {
-        Task task = new Task(nextId++, description, Status.PENDING);
+    public TaskService() throws IOException {
+        this(new TaskRepository());
+    }
+
+    public TaskService(TaskRepository repository) throws IOException {
+        this.repository = repository;
+        TaskData data = repository.loadData();
+        this.tasks = new ArrayList<>(data.getTasks());
+        this.nextId = data.getNextId();
+    }
+
+    public Task addTask(String description) throws IOException {
+        Task task = Task.newTask(nextId++, description);
         tasks.add(task);
+        save();
         return task;
     }
 
-    public List<TaskDTO> listTasks(){
-
-        return tasks.stream()
-                .map(task -> new TaskDTO(
-                        task.getId(),
-                        task.getDescription(),
-                        task.getStatus()
-                ))
-                .toList();
+    public List<Task> listTasks(){
+        return new ArrayList<>(tasks);
     }
 
     public List<TaskDTO> listarTasksParaIniciar() {
@@ -65,28 +72,32 @@ public class TaskService {
                 .toList();
     }
 
-    public Task startTask(long id) {
+    public Task startTask(long id) throws IOException {
         Task task = findTaskById(id);
         task.start();
+        save();
         return task;
     }
 
-    public Task completeTask(long id) {
+    public Task completeTask(long id) throws IOException {
         Task task = findTaskById(id);
         task.complete();
+        save();
         return task;
     }
 
-    public Task cancelTask(long id) {
+    public Task cancelTask(long id) throws IOException {
         Task task = findTaskById(id);
         task.cancel();
+        save();
         return task;
     }
 
-    public void removeTask(long id) {
+    public void removeTask(long id) throws IOException {
         if (!tasks.removeIf(task -> task.getId() == id)) {
             throw new TaskNotFoundException("Task with id " + id + " not found.");
         }
+        save();
     }
 
     private Task findTaskById(long id) {
@@ -94,5 +105,10 @@ public class TaskService {
                 .filter(task -> task.getId() == id)
                 .findFirst()
                 .orElseThrow(() -> new TaskNotFoundException("Task with id " + id + " not found."));
+    }
+
+    private void save() throws IOException {
+        TaskData data = new TaskData(nextId, tasks);
+        repository.save(data);
     }
 }

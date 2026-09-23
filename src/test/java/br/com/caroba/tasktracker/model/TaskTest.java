@@ -11,7 +11,7 @@ class TaskTest {
 
     @BeforeEach
     void setUp() {
-        task = new Task(1L, "Teste Task", Status.PENDING);
+        task = Task.newTask(1L, "Teste Task");
     }
 
     @Test
