@@ -3,6 +3,9 @@ package br.com.caroba.tasktracker.cli;
 import br.com.caroba.tasktracker.dto.TaskDTO;
 import br.com.caroba.tasktracker.model.Task;
 import br.com.caroba.tasktracker.service.TaskService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.io.IOException;
 import java.util.List;
@@ -12,10 +15,13 @@ public class CommandLineInterface {
 
     private final TaskService taskService;
     private final Scanner scanner;
+    private final ObjectMapper objectMapper;
 
     public CommandLineInterface(TaskService taskService) {
         this.taskService = taskService;
         this.scanner = new Scanner(System.in);
+        this.objectMapper = new ObjectMapper();
+        this.objectMapper.registerModule(new JavaTimeModule());
     }
 
     private static final String MENU = """
@@ -75,8 +81,14 @@ public class CommandLineInterface {
             return;
         }
 
-        for (Task task : lista) {
-            System.out.printf("[%d] - %s - %s%n", task.getId(), task.getDescription(), task.getStatus());
+        try {
+            String json = objectMapper
+                    .writerWithDefaultPrettyPrinter()
+                    .writeValueAsString(lista);
+
+            System.out.println(json);
+        } catch (JsonProcessingException e) {
+            System.out.println("Erro ao parsear tarefas para JSON: " + e.getMessage());
         }
         System.out.println();
     }
