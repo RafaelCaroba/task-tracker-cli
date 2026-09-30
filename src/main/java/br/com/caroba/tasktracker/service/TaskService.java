@@ -35,6 +35,13 @@ public class TaskService {
         return task;
     }
 
+    public Task updateTask(long id, String descricao) throws IOException {
+        Task task = findTaskById(id);
+        task.updateDescription(descricao);
+        save();
+        return task;
+    }
+
     public List<Task> listTasks(){
         return new ArrayList<>(tasks);
     }

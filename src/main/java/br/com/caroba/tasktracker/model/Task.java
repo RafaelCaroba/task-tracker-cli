@@ -59,6 +59,10 @@ public class Task {
         this.createdAt = createdAt;
     }
 
+    public void updateDescription(String descricao) {
+        this.description = descricao;
+    }
+
     public void start(){
         if (this.status != Status.PENDING) {
             throw new IllegalArgumentException("Task " + id + " is not pending and cannot be started.");
