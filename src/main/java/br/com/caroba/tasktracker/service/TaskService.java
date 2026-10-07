@@ -79,6 +79,12 @@ public class TaskService {
                 .toList();
     }
 
+    public List<Task> listByStatus(Status status) {
+        return tasks.stream()
+                .filter(task -> task.getStatus() == status)
+                .toList();
+    }
+
     public Task startTask(long id) throws IOException {
         Task task = findTaskById(id);
         task.start();

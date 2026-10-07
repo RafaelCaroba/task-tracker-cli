@@ -1,8 +1,15 @@
 package br.com.caroba.tasktracker.cli;
 
+import br.com.caroba.tasktracker.model.Status;
+import br.com.caroba.tasktracker.model.Task;
 import br.com.caroba.tasktracker.service.TaskService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TaskCommandRunner {
 
@@ -24,6 +31,7 @@ public class TaskCommandRunner {
             return switch (comando) {
                 case "add" -> handleAdd(args);
                 case "update" -> handleUpdate(args);
+                case "list" -> handleList(args);
                 default -> handleUnknown(comando);
             };
         } catch (Exception e) {
@@ -57,6 +65,42 @@ public class TaskCommandRunner {
 
         service.updateTask(id, novaDescricao);
         System.out.println("Tarefa atualizada com sucesso!");
+
+        return 0;
+    }
+
+    private int handleList(String[] args) throws JsonProcessingException {
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        List<Task> taskList;
+
+        if (args.length > 1) {
+            switch (args[1].trim().toLowerCase()){
+                case "todo":
+                    taskList = service.listByStatus(Status.PENDING);
+                    break;
+                case "in-progress":
+                    taskList = service.listByStatus(Status.IN_PROGRESS);
+                    break;
+                case  "done":
+                    taskList = service.listByStatus(Status.COMPLETED);
+                    break;
+                case "canceled":
+                    taskList = service.listByStatus(Status.CANCELED);
+                    break;
+                default:
+                    throw new IllegalArgumentException(
+                            "Filtro inválido: " + args[1] + ". Use done, todo ou in-progress"
+                    );
+            }
+        } else {
+            taskList = service.listTasks();
+        }
+
+        for (Task t : taskList) {
+            System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(t));
+        }
 
         return 0;
     }
