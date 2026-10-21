@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class TaskCommandRunner {
@@ -32,6 +31,7 @@ public class TaskCommandRunner {
                 case "add" -> handleAdd(args);
                 case "update" -> handleUpdate(args);
                 case "list" -> handleList(args);
+                case "delete" -> handleDelete(args);
                 default -> handleUnknown(comando);
             };
         } catch (Exception e) {
@@ -101,6 +101,22 @@ public class TaskCommandRunner {
         for (Task t : taskList) {
             System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(t));
         }
+
+        return 0;
+    }
+
+    private int handleDelete(String[] args) throws IOException {
+
+        if (args.length > 2 ) {
+            throw new IllegalArgumentException("Argumento inválido. " +
+                    "Informe apenas o id da tarefa que deseja excluir.");
+        }
+
+        long idToDelete = parseId(args[1]);
+
+        service.removeTask(idToDelete);
+
+        System.out.println("Tarefa removida com sucesso!");
 
         return 0;
     }
