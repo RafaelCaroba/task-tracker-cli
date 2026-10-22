@@ -85,7 +85,7 @@ public class Task {
             throw new IllegalArgumentException(
                     "Task " + id + " is already completed and cannot be canceled");
         }
-        this.status = Status.CANCELED;
+        this.status = Status.PENDING;
         atualizaHoraUpdate();
     }
 

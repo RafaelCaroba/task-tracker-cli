@@ -34,6 +34,7 @@ public class TaskCommandRunner {
                 case "delete" -> handleDelete(args);
                 case "mark-in-progress" -> handleMarkInProgress(args);
                 case "mark-done" -> handleMarkDone(args);
+                case "cancel" -> handleCancelTask(args);
                 // handle cancelTask (return to pending)?
                 default -> handleUnknown(comando);
             };
@@ -154,6 +155,21 @@ public class TaskCommandRunner {
         return 0;
     }
 
+    private int handleCancelTask(String[] args) throws IOException {
+        if (args.length != 2) {
+            throw new IllegalArgumentException("Número de argumentos inválido. " +
+                    "Informe apenas o id da tarefa que deseja atualizar.");
+        }
+
+        long taskId = parseId(args[1]);
+
+        service.cancelTask(taskId);
+
+        System.out.println("Tarefa cancelada com sucesso!");
+
+        return 0;
+    }
+
     private void validarUpdate(String id, String descricao) {
         if (id.isBlank()) {
             throw new RuntimeException("O id da task deve ser passado como primeiro argumento.");
@@ -185,6 +201,7 @@ public class TaskCommandRunner {
                 task-cli add "description"
                 task-cli update <id> "description"
                 task-cli delete <id>
+                task-cli cancel <id>
                 task-cli mark-in-progress <id>
                 task-cli mark-done <id>
                 task-cli list
