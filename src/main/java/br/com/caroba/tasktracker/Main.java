@@ -12,8 +12,6 @@ public class Main {
             TaskService taskService = new TaskService();
             TaskCommandRunner runner = new TaskCommandRunner(taskService);
             runner.run(args);
-//            CommandLineInterface cli = new CommandLineInterface(taskService);
-//            cli.showMenu();
         } catch (IOException e) {
             System.err.println("Erro ao inicializar aplicação: " + e.getMessage());
         }

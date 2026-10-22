@@ -10,11 +10,17 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 
 public class TaskRepository {
+    private static final Path DEFAULT_TASKS_PATH = Path.of(
+            System.getProperty("user.home"),
+            ".task-cli",
+            "tasks.json"
+    );
+
     ObjectMapper objectMapper;
     Path path;
 
     public TaskRepository() {
-        this(Path.of("data", "tasks.json"));
+        this(DEFAULT_TASKS_PATH);
     }
 
     public TaskRepository(Path path) {
