@@ -74,7 +74,7 @@ public class Task {
     public void complete() {
         if (this.status != Status.IN_PROGRESS) {
             throw new IllegalArgumentException(
-                    "Task " + id + "is not in progress and cannot be completed");
+                    "Task " + id + " is not in progress and cannot be completed");
         }
         this.status = Status.COMPLETED;
         atualizaHoraUpdate();

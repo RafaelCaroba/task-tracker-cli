@@ -33,7 +33,7 @@ public class TaskCommandRunner {
                 case "list" -> handleList(args);
                 case "delete" -> handleDelete(args);
                 case "mark-in-progress" -> handleMarkInProgress(args);
-                // handle markDone
+                case "mark-done" -> handleMarkDone(args);
                 // handle cancelTask (return to pending)?
                 default -> handleUnknown(comando);
             };
@@ -135,6 +135,21 @@ public class TaskCommandRunner {
         service.startTask(taskId);
 
         System.out.println("Tarefa iniciada com sucesso!");
+
+        return 0;
+    }
+
+    private int handleMarkDone(String[] args) throws IOException {
+        if (args.length != 2) {
+            throw new IllegalArgumentException("Número de argumentos inválido. " +
+                    "Informe apenas o id da tarefa que deseja atualizar.");
+        }
+
+        long taskId = parseId(args[1]);
+
+        service.completeTask(taskId);
+
+        System.out.println("Tarefa completa com sucesso!");
 
         return 0;
     }
