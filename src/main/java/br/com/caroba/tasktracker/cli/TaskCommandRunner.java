@@ -32,6 +32,9 @@ public class TaskCommandRunner {
                 case "update" -> handleUpdate(args);
                 case "list" -> handleList(args);
                 case "delete" -> handleDelete(args);
+                case "mark-in-progress" -> handleMarkInProgress(args);
+                // handle markDone
+                // handle cancelTask (return to pending)?
                 default -> handleUnknown(comando);
             };
         } catch (Exception e) {
@@ -107,7 +110,7 @@ public class TaskCommandRunner {
 
     private int handleDelete(String[] args) throws IOException {
 
-        if (args.length > 2 ) {
+        if (args.length != 2 ) {
             throw new IllegalArgumentException("Argumento inválido. " +
                     "Informe apenas o id da tarefa que deseja excluir.");
         }
@@ -117,6 +120,21 @@ public class TaskCommandRunner {
         service.removeTask(idToDelete);
 
         System.out.println("Tarefa removida com sucesso!");
+
+        return 0;
+    }
+
+    private int handleMarkInProgress(String[] args) throws IOException {
+        if (args.length != 2) {
+            throw new IllegalArgumentException("Número de argumentos inválido. " +
+                    "Informe apenas o id da tarefa que deseja atualizar.");
+        }
+
+        long taskId = parseId(args[1]);
+
+        service.startTask(taskId);
+
+        System.out.println("Tarefa iniciada com sucesso!");
 
         return 0;
     }
