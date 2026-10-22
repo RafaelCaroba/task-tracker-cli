@@ -35,7 +35,6 @@ public class TaskCommandRunner {
                 case "mark-in-progress" -> handleMarkInProgress(args);
                 case "mark-done" -> handleMarkDone(args);
                 case "cancel" -> handleCancelTask(args);
-                // handle cancelTask (return to pending)?
                 default -> handleUnknown(comando);
             };
         } catch (Exception e) {
